@@ -21,27 +21,41 @@ class Basket
       end
     end
 
-    # Add a new line item by its product code
     def add(product_code)
-      product = Product.find_by(code: product_code)
-      line_item = LineItem.find_or_initialize_by(product_id: product.id)
-      line_item.quantity += 1 if line_item.persisted?
-      line_item.save
+      new.add(product_code)
     end
 
-    # Remove a line item (or reduce quantity) by its product code
     def remove(product_code)
-      product = Product.find_by(code: product_code)
-      line_item = LineItem.find_by(product_id: product.id)
-      if line_item
-        line_item.update quantity: line_item.quantity - 1
-      end
+      new.remove(product_code)
     end
 
-    # Convenience method to satisfy specification
-    def total
-      new.total
+    def empty
+      new.empty
     end
+  end
+
+  # Add a new line item by its product code
+  def add(product_code)
+    product = Product.find_by(code: product_code)
+    line_item = LineItem.find_or_initialize_by(product_id: product.id)
+    line_item.quantity += 1 if line_item.persisted?
+    line_item.save
+    clear_cache
+  end
+
+  # Remove a line item (or reduce quantity) by its product code
+  def remove(product_code)
+    product = Product.find_by(code: product_code)
+    line_item = LineItem.find_by(product_id: product.id)
+    if line_item
+      line_item.update quantity: line_item.quantity - 1
+    end
+    clear_cache
+  end
+
+  def empty
+    LineItem.destroy_all
+    clear_cache
   end
 
   # The price of all line items, not including discounts or delivery charges
@@ -80,5 +94,12 @@ class Basket
 
   def format(number)
     ActiveSupport::NumberHelper.number_to_currency(number.to_f / 100, unit: '£')
+  end
+
+  def clear_cache
+    @subtotal = nil
+    @delivery_charge = nil
+    @total = nil
+    @line_items = nil
   end
 end
