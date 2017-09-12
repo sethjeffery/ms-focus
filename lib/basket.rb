@@ -43,13 +43,7 @@ module Basket
       # TODO: What if multiple offers exist for the same product?
 
       offers = special_offers.select{|offer| offer.product_id == line_item.product_id}
-      total + line_item.total_price - offers.map{|offer| offer.discount_for(line_item) }
+      total + line_item.total_cost - offers.map{|offer| offer.discount_for(line_item) }.sum
     }
-  end
-
-  private
-
-  def fetch_line_items
-    LineItem.all
   end
 end

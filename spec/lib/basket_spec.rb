@@ -68,7 +68,22 @@ RSpec.describe Basket do
   end
 
   describe '#total' do
-    it 'returns the total cost of the basket'
-    it 'takes into account the delivery and offer rules'
+    let(:product_one) { create(:product, price: 500) }
+    let(:product_two) { create(:product, price: 750) }
+
+    before do
+      Basket.add(product_one.code)
+      Basket.add(product_one.code)
+      Basket.add(product_two.code)
+    end
+
+    it 'returns the total cost of the basket' do
+      expect(Basket.total).to eq 1750
+    end
+
+    it 'takes into account the delivery and offer rules' do
+      create(:special_offer, product: product_one, quantity: 2, discount_percent: 100)
+      expect(Basket.total).to eq 1250
+    end
   end
 end
