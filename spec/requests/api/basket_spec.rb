@@ -36,8 +36,15 @@ RSpec.describe 'Basket API' do
   describe 'POST /api/basket/remove' do
     it 'adds a new item to the basket' do
       Basket.add(product.code)
-
       post '/api/basket/remove.json', params: { code: product.code }
+
+      expect(response).to be_success
+      expect(LineItem.count).to eq 0
+    end
+
+    it 'also can be DELETE' do
+      Basket.add(product.code)
+      delete '/api/basket/remove.json', params: { code: product.code }
 
       expect(response).to be_success
       expect(LineItem.count).to eq 0
