@@ -1,44 +1,57 @@
-module Basket
+class Basket
   include ActionView::Helpers::NumberHelper
-  extend self
 
-  def setup(products: [], delivery_charges: [], special_offers: [])
-    Product.destroy_all
-    DeliveryCharge.destroy_all
-    SpecialOffer.destroy_all
+  class << self
+    # Set up the shop catalog with the given products, delivery charges and offers
+    def setup(products: [], delivery_charges: [], special_offers: [])
+      Product.destroy_all
+      DeliveryCharge.destroy_all
+      SpecialOffer.destroy_all
 
-    products.each do |product|
-      Product.create! product
+      products.each do |product|
+        Product.create! product
+      end
+
+      delivery_charges.each do |delivery_charge|
+        DeliveryCharge.create! delivery_charge
+      end
+
+      special_offers.each do |special_offer|
+        SpecialOffer.create! special_offer
+      end
     end
 
-    delivery_charges.each do |delivery_charge|
-      DeliveryCharge.create! delivery_charge
+    # Add a new line item by its product code
+    def add(product_code)
+      product = Product.find_by(code: product_code)
+      line_item = LineItem.find_or_initialize_by(product_id: product.id)
+      line_item.quantity += 1 if line_item.persisted?
+      line_item.save
     end
 
-    special_offers.each do |special_offer|
-      SpecialOffer.create! special_offer
+    # Remove a line item (or reduce quantity) by its product code
+    def remove(product_code)
+      product = Product.find_by(code: product_code)
+      line_item = LineItem.find_by(product_id: product.id)
+      if line_item
+        line_item.update quantity: line_item.quantity - 1
+      end
+    end
+
+    # Convenience method to satisfy specification
+    def total
+      new.total
     end
   end
 
-  def add(product_code)
-    product = Product.find_by(code: product_code)
-    line_item = LineItem.find_or_initialize_by(product_id: product.id)
-    line_item.quantity += 1 if line_item.persisted?
-    line_item.save
-  end
-
-  def remove(product_code)
-    product = Product.find_by(code: product_code)
-    line_item = LineItem.find_by(product_id: product.id)
-    if line_item
-      line_item.update quantity: line_item.quantity - 1
-    end
-  end
-
+  # The price of all line items, not including discounts or delivery charges
   def subtotal
+    return @subtotal if @subtotal
+
+    # Get all relevant special offers
     special_offers = SpecialOffer.where(product_id: line_items.map(&:product_id))
 
-    line_items.reduce(0){ |total, line_item|
+    @subtotal = line_items.reduce(0){ |total, line_item|
       # Pick all offers for the given line item, and apply their discount
       # TODO: What if multiple offers exist for the same product?
 
@@ -48,11 +61,11 @@ module Basket
   end
 
   def delivery_charge
-    DeliveryCharge.price_for_total(subtotal)
+    @delivery_charge ||= DeliveryCharge.price_for_total(subtotal)
   end
 
   def total
-    subtotal + delivery_charge
+    @total ||= subtotal + delivery_charge
   end
 
   def formatted_total
@@ -60,7 +73,7 @@ module Basket
   end
 
   def line_items
-    LineItem.all
+    @line_items ||= LineItem.all
   end
 
   private

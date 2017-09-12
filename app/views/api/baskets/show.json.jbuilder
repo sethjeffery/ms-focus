@@ -1,8 +1,8 @@
-json.total                      Basket.total
-json.formatted_total            Basket.formatted_total
-json.subtotal                   Basket.subtotal
-json.delivery_charge            Basket.delivery_charge
+json.total            @basket.total
+json.formatted_total  @basket.formatted_total
+json.subtotal         @basket.subtotal
+json.delivery_charge  @basket.delivery_charge
 
 json.items do
-  json.array! Basket.line_items, :name, :code, :price, :quantity, :total_cost
+  json.array! @basket.line_items, :name, :code, :price, :quantity, :total_cost
 end

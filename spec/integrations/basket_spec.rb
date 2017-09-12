@@ -8,7 +8,7 @@ RSpec.describe 'Basket' do
       it 'costs £37.85' do
         Basket.add 'S01'
         Basket.add 'B01'
-        expect(Basket.formatted_total).to eq '£37.85'
+        expect(Basket.new.formatted_total).to eq '£37.85'
       end
     end
 
@@ -16,7 +16,7 @@ RSpec.describe 'Basket' do
       it 'costs £54.37' do
         Basket.add 'J01'
         Basket.add 'J01'
-        expect(Basket.formatted_total).to eq '£54.37'
+        expect(Basket.new.formatted_total).to eq '£54.37'
       end
     end
 
@@ -24,7 +24,7 @@ RSpec.describe 'Basket' do
       it 'costs £60.85' do
         Basket.add 'J01'
         Basket.add 'B01'
-        expect(Basket.formatted_total).to eq '£60.85'
+        expect(Basket.new.formatted_total).to eq '£60.85'
       end
     end
 
@@ -35,7 +35,7 @@ RSpec.describe 'Basket' do
         Basket.add 'J01'
         Basket.add 'J01'
         Basket.add 'J01'
-        expect(Basket.formatted_total).to eq '£98.27'
+        expect(Basket.new.formatted_total).to eq '£98.27'
       end
     end
   end

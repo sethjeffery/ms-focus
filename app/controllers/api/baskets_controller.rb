@@ -8,4 +8,8 @@ class Api::BasketsController < Api::ApiController
     Basket.remove(params[:code])
     head :ok
   end
+
+  def show
+    @basket = Basket.new
+  end
 end
