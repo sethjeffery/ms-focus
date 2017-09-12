@@ -37,6 +37,12 @@ RSpec.describe Basket do
       3.times { described_class.add(product.code) }
       expect(LineItem.first.quantity).to eq 3
     end
+
+    context 'with missing code' do
+      it 'raises a RecordNotFound exception' do
+        expect{ described_class.add('BAD CODE') }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
   end
 
   describe '.remove' do
@@ -63,6 +69,12 @@ RSpec.describe Basket do
       it 'reduces the item quantity' do
         item = LineItem.create! product: product, quantity: 2
         expect{ described_class.remove(product.code) }.to change{ item.reload.quantity }.from(2).to(1)
+      end
+    end
+
+    context 'with missing code' do
+      it 'raises a RecordNotFound exception' do
+        expect{ described_class.remove('BAD CODE') }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end

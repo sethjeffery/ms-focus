@@ -36,7 +36,7 @@ class Basket
 
   # Add a new line item by its product code
   def add(product_code)
-    product = Product.find_by(code: product_code)
+    product = Product.find_by!(code: product_code)
     line_item = LineItem.find_or_initialize_by(product_id: product.id)
     line_item.quantity += 1 if line_item.persisted?
     line_item.save
@@ -45,7 +45,7 @@ class Basket
 
   # Remove a line item (or reduce quantity) by its product code
   def remove(product_code)
-    product = Product.find_by(code: product_code)
+    product = Product.find_by!(code: product_code)
     line_item = LineItem.find_by(product_id: product.id)
     if line_item
       line_item.update quantity: line_item.quantity - 1
