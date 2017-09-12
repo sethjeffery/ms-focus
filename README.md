@@ -48,3 +48,4 @@ GET /api/basket.json
 - If offers conflict or have conditions, the system would need to be more intelligent to decide which one to pick.
 - Perhaps there might be more criteria for offers, e.g. fixed discount, a range of products, get a free other product, etc.
 - Given plenty more time, of course a single-page front end could also be created for the app.
+- `Basket` can start to get large and might need extracting out some concerns, e.g. `setup` is not really a concern of the Basket, and the total calculations could be moved to a `Checkout` class.
