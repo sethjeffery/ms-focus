@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Basket' do
+  before { load_seeds }
+
   context 'examples' do
     describe 'with S01, B01' do
       it 'costs £37.85'
