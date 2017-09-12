@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :line_item do
-    product nil
+    product
     quantity 1
   end
 end

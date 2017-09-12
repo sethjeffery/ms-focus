@@ -1,8 +1,8 @@
 FactoryGirl.define do
   factory :special_offer do
-    name "MyString"
+    name "Special Offer"
     product nil
-    quantity 1
-    discount_percent 1.5
+    quantity 2
+    discount_percent 50
   end
 end

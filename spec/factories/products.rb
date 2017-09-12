@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :product do
-    name "MyString"
-    price 1
-    code "MyString"
+    sequence(:name) { |i| "Product-#{i}" }
+    sequence(:code) { |i| "P#{i.to_s.rjust(2, "0")}" }
+    price 100
   end
 end
