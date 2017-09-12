@@ -1,4 +1,5 @@
 module Basket
+  include ActionView::Helpers::NumberHelper
   extend self
 
   def setup(products: [], delivery_charges: [], special_offers: [])
@@ -45,5 +46,9 @@ module Basket
       offers = special_offers.select{|offer| offer.product_id == line_item.product_id}
       total + line_item.total_cost - offers.map{|offer| offer.discount_for(line_item) }.sum
     }
+  end
+
+  def formatted_total
+    ActiveSupport::NumberHelper.number_to_currency(total.to_f / 100, unit: '£')
   end
 end

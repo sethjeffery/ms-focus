@@ -86,4 +86,11 @@ RSpec.describe Basket do
       expect(Basket.total).to eq 1250
     end
   end
+
+  describe '#formatted_total' do
+    it 'returns the total formatted as a currency' do
+      allow(subject).to receive(:total).and_return(1345)
+      expect(subject.formatted_total).to eq '£13.45'
+    end
+  end
 end
