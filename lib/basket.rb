@@ -30,11 +30,7 @@ module Basket
     product = Product.find_by(code: product_code)
     line_item = LineItem.find_by(product_id: product.id)
     if line_item
-      if line_item.quantity == 1
-        line_item.destroy
-      else
-        line_item.update quantity: line_item.quantity - 1
-      end
+      line_item.update quantity: line_item.quantity - 1
     end
   end
 end
