@@ -85,6 +85,11 @@ RSpec.describe Basket do
       create(:special_offer, product: product_one, quantity: 2, discount_percent: 100)
       expect(Basket.total).to eq 1250
     end
+
+    it 'takes into account delivery charges' do
+      create(:delivery_charge, price_threshold: 2000, charge: 499)
+      expect(Basket.total).to eq 2249
+    end
   end
 
   describe '#formatted_total' do

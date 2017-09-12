@@ -39,13 +39,15 @@ module Basket
     line_items = LineItem.all
     special_offers = SpecialOffer.where(product_id: line_items.map(&:product_id))
 
-    line_items.reduce(0){ |total, line_item|
+    subtotal = line_items.reduce(0){ |total, line_item|
       # Pick all offers for the given line item, and apply their discount
       # TODO: What if multiple offers exist for the same product?
 
       offers = special_offers.select{|offer| offer.product_id == line_item.product_id}
       total + line_item.total_cost - offers.map{|offer| offer.discount_for(line_item) }.sum
     }
+
+    subtotal + DeliveryCharge.price_for_total(subtotal)
   end
 
   def formatted_total
