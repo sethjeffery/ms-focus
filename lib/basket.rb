@@ -35,22 +35,37 @@ module Basket
     end
   end
 
-  def total
-    line_items = LineItem.all
+  def subtotal
     special_offers = SpecialOffer.where(product_id: line_items.map(&:product_id))
 
-    subtotal = line_items.reduce(0){ |total, line_item|
+    line_items.reduce(0){ |total, line_item|
       # Pick all offers for the given line item, and apply their discount
       # TODO: What if multiple offers exist for the same product?
 
       offers = special_offers.select{|offer| offer.product_id == line_item.product_id}
       total + line_item.total_cost - offers.map{|offer| offer.discount_for(line_item) }.sum
     }
+  end
 
-    subtotal + DeliveryCharge.price_for_total(subtotal)
+  def delivery_charge
+    DeliveryCharge.price_for_total(subtotal)
+  end
+
+  def total
+    subtotal + delivery_charge
   end
 
   def formatted_total
-    ActiveSupport::NumberHelper.number_to_currency(total.to_f / 100, unit: '£')
+    format total
+  end
+
+  def line_items
+    LineItem.all
+  end
+
+  private
+
+  def format(number)
+    ActiveSupport::NumberHelper.number_to_currency(number.to_f / 100, unit: '£')
   end
 end
