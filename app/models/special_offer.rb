@@ -11,7 +11,7 @@ class SpecialOffer < ApplicationRecord
 
   def discount_for(line_item)
     if valid_for?(line_item)
-      ((discount_percent * line_item.price) / 100).to_i
+      ((discount_percent * line_item.price) / 100.0).ceil.to_i
     else
       0
     end
