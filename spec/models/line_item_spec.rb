@@ -10,4 +10,15 @@ RSpec.describe LineItem, type: :model do
       expect(subject.total_cost).to eq(5 * 200)
     end
   end
+
+  context 'after_save' do
+    context 'quantity is zero' do
+      it 'destroys itself' do
+        line_item = create(:line_item)
+        expect {
+          line_item.update(quantity: 0)
+        }.to change{ LineItem.count }.by(-1)
+      end
+    end
+  end
 end

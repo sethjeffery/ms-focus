@@ -10,10 +10,6 @@ class LineItem < ApplicationRecord
     price * quantity
   end
 
-  def discounted_cost(special_offers = [])
-    total_cost - special_offers.map{|offer| offer.discount}
-  end
-
   private
 
   def check_quantity_zero
