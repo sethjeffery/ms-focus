@@ -33,4 +33,23 @@ module Basket
       line_item.update quantity: line_item.quantity - 1
     end
   end
+
+  def total
+    line_items = LineItem.all
+    special_offers = SpecialOffer.where(product_id: line_items.map(&:product_id))
+
+    line_items.reduce(0){ |total, line_item|
+      # Pick all offers for the given line item, and apply their discount
+      # TODO: What if multiple offers exist for the same product?
+
+      offers = special_offers.select{|offer| offer.product_id == line_item.product_id}
+      total + line_item.total_price - offers.map{|offer| offer.discount_for(line_item) }
+    }
+  end
+
+  private
+
+  def fetch_line_items
+    LineItem.all
+  end
 end
