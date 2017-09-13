@@ -1,3 +1,5 @@
+require 'basket'
+
 class Api::BasketsController < Api::ApiController
   def add
     Basket.add(params[:code])
