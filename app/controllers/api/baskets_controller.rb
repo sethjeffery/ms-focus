@@ -1,17 +1,21 @@
 require 'basket'
 
 class Api::BasketsController < Api::ApiController
+  before_action :fetch_basket
+
   def add
-    Basket.add(params[:code])
-    head :created
+    @basket.add(params[:code])
+    render 'show'
   end
 
   def remove
-    Basket.remove(params[:code])
-    head :ok
+    @basket.remove(params[:code])
+    render 'show'
   end
 
-  def show
-    @basket = Basket.new
+  private
+
+  def fetch_basket
+    @basket ||= Basket.new
   end
 end

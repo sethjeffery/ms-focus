@@ -30,6 +30,10 @@ RSpec.describe 'Basket API' do
       expect(response).to be_success
       expect(LineItem.first.product).to eq product
       expect(LineItem.first.quantity).to eq 2
+
+      json = JSON.parse(response.body)
+      expect(json['items'].length).to eq(1)
+      expect(json['items'][0]['quantity']).to eq(2)
     end
   end
 
@@ -40,6 +44,9 @@ RSpec.describe 'Basket API' do
 
       expect(response).to be_success
       expect(LineItem.count).to eq 0
+
+      json = JSON.parse(response.body)
+      expect(json['items'].length).to eq(0)
     end
 
     it 'also can be DELETE' do
@@ -48,6 +55,9 @@ RSpec.describe 'Basket API' do
 
       expect(response).to be_success
       expect(LineItem.count).to eq 0
+
+      json = JSON.parse(response.body)
+      expect(json['items'].length).to eq(0)
     end
   end
 end
