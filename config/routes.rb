@@ -5,5 +5,7 @@ Rails.application.routes.draw do
       post :remove
       delete :remove
     end
+
+    resources :products
   end
 end

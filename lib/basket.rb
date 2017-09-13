@@ -1,5 +1,5 @@
 class Basket
-  include ActionView::Helpers::NumberHelper
+  include Formatted
 
   class << self
     # Set up the shop catalog with the given products, delivery charges and offers
@@ -91,10 +91,6 @@ class Basket
   end
 
   private
-
-  def format(number)
-    ActiveSupport::NumberHelper.number_to_currency(number.to_f / 100, unit: '£')
-  end
 
   def clear_cache
     @subtotal = nil
