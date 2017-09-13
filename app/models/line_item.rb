@@ -1,4 +1,6 @@
 class LineItem < ApplicationRecord
+  include Formatted
+
   belongs_to :product
 
   delegate :code, :name, :price, to: :product
@@ -8,6 +10,10 @@ class LineItem < ApplicationRecord
 
   def total_cost
     price * quantity
+  end
+
+  def formatted_total_cost
+    format total_cost
   end
 
   private
