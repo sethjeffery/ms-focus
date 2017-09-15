@@ -90,6 +90,10 @@ class Basket
     @line_items ||= LineItem.all
   end
 
+  def formatted_delivery_charge
+    format delivery_charge
+  end
+
   private
 
   def clear_cache
